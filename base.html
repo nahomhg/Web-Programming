@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>News Articles</title>
+  </head>
+  <body>
+    <div class="jumbotron">
+      <div class="title-container">
+        <h1>Article Creator</h1>
+        <hr class="mt-0 mb-4">
+        <div id="button-container">
+          <button id="fetch-btn" class="btn btn-primary btn-sm">Fetch</button>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col">
+            <div>Articles: </div>
+            <ul id="mylist">
+              <!-- {% for articles in article_list %}
+                <li class="pt-2">{{ articles.title }} - by: {{ articles.writer }}</li>
+              {% endfor %} -->
+            </ul>
+
+        <div id="addArticles">
+              <form id="myform" class="form-group col-md-10">
+                {% csrf_token %}
+                <label for="title">Title:</lable>
+                <input type="text" name="article-headers"/ class="form-control" id="title">
+                <label for="selectNames">Name Of Writer:</label>
+                <select id="selectNames" name="writer-name">
+                  <!--Here is where the all the names will be displayed-->
+                </select>
+              </form>
+              <button id="add-btn">Add Item</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+
+    $(function run(){
+      $("#fetch-btn").click(function (){
+        $.ajax({
+          url : "{% url 'list of articles' %}",
+          success : function func(data){
+                   for(i = 0; i < data.items.length; i++){
+                     $("#mylist").append("<li>"+data.items[i].title+"</li>")
+                    }
+                 }
+               })
+        $("#fetch-btn").attr("disabled", true);
+           })
+         $("#add-btn").click(function (){
+              $.ajax({
+                url : "{% url 'new article' %}",
+                method : "POST",
+                data : $("#myform").serializeArray(),
+                success : function func(data){
+                    $("#mylist").append("<li>"+data.title+"</li>")
+                       }
+                     })
+                  })
+          })
+
+          $("#selectNames").ready(function (){
+            $.ajax({
+              url : "{% url 'writer names' %}",
+              success : function func(data){
+                for(i = 0; i < data.writersList.length; i++){
+                  $("#selectNames").append("<option>"+data.writersList[i].name+"</option>")
+                }
+              }  // error : console.log("test"),
+          })
+        })
+    </script>
+
+  </body>
+</html>

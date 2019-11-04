@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <form>
+    {{ form.as_p }}
+    {{ formWriter }}
+    <button id="postArticle" class="btn btn-primary btn-sm">Submit</button>
+  </form>
+
+{% endblock %}
